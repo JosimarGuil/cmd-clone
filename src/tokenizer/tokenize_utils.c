@@ -1,5 +1,40 @@
 #include "../../includes/minishell.h"
 
+
+char *read_word(char *input, int *i, t_quote_type *quote)
+{
+    char buffer[4096];
+    int j;
+    char current_quote;
+
+    j = 0;
+
+    while (input[*i] && input[*i] != ' ' && input[*i] != '|' && input[*i] != '>' && input[*i] != '<')
+    {
+        if (input[*i] == '\'' || input[*i] == '"')
+        {
+            if (input[*i] == '\'')
+                *quote = SINGLE_QUOTE;
+            else
+                *quote = DOUBLE_QUOTE;
+
+            current_quote = input[*i];
+            (*i)++;
+
+            while (input[*i] && input[*i] != current_quote)
+                buffer[j++] = input[(*i)++];
+
+            if (input[*i] == current_quote)
+                (*i)++;
+        }
+        else
+            buffer[j++] = input[(*i)++];
+    }
+
+    buffer[j] = '\0';
+    return strdup(buffer);
+}
+
 char **add_to_array(char **array, char *new_str)
 {
     int i;

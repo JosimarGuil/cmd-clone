@@ -32,7 +32,6 @@ static void add_token(t_token **list, t_token *new)
 t_token *lexer(char *input)
 {
     int i = 0;
-    int start;
     t_token *tokens = NULL;
 
     while (input[i])
@@ -80,37 +79,6 @@ t_token *lexer(char *input)
             i++;
             continue;
         }
-        if (input[i] == '"' || input[i] == '\'')
-        {
-            char quote;
-            char *value;
-            t_quote_type qtype;
-            t_token *tok;
-
-            quote = input[i];
-
-            if (quote == '\'')
-                qtype = SINGLE_QUOTE;
-            else
-                qtype = DOUBLE_QUOTE;
-
-            i++;
-            start = i;
-
-            while (input[i] && input[i] != quote)
-                i++;
-
-            value = strndup(&input[start], i - start);
-
-            tok = new_token(value, TOKEN_WORD, qtype);
-
-            add_token(&tokens, tok);
-
-            if (input[i] == quote)
-                i++;
-
-            continue;
-        }
 
         if (input[i] == '&' && input[i + 1] == '&')
         {
@@ -118,12 +86,13 @@ t_token *lexer(char *input)
             i += 2;
             continue;
         }
-        start = i;
-        while (input[i] && input[i] != ' ' && input[i] != '|'
-        && input[i] != '>' && input[i] != '<' && input[i] != '"' && input[i] != '\'')
-            i++;
-        char *word = strndup(&input[start], i - start);
-        add_token(&tokens, new_token(word, TOKEN_WORD, NO_QUOTE));
+        char *word;
+        t_quote_type q;
+        q = NO_QUOTE;
+        word = read_word(input, &i, &q);
+        if (word)
+            add_token(&tokens, new_token(word, TOKEN_WORD, q));
+        continue;
     }
     return tokens;
 }

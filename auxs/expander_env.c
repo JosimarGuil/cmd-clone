@@ -27,7 +27,6 @@ static char *expand_string(char *str, t_shell *shell)
     {
         if (str[i] == '$')
         {
-            // CASE 1: $?
             if (str[i + 1] == '?')
             {
                 value = ft_itoa(shell->last_exit_status);
@@ -36,8 +35,6 @@ static char *expand_string(char *str, t_shell *shell)
                 i += 2;
                 continue;
             }
-
-            // CASE 2: $$ (PID do shell)
             if (str[i + 1] == '$')
             {
                 value = ft_itoa(getpid());
@@ -46,8 +43,6 @@ static char *expand_string(char *str, t_shell *shell)
                 i += 2;
                 continue;
             }
-
-            // CASE 3: $VAR (válido)
             if (ft_isalpha(str[i + 1]) || str[i + 1] == '_')
             {
                 i++;
@@ -64,9 +59,6 @@ static char *expand_string(char *str, t_shell *shell)
 
                 continue;
             }
-
-            // CASE 4: $ seguido de nada válido (ex: $abc, $1, $-)
-            // REGRA: bash -> deixa o '$' literal
             result[j++] = '$';
             i++;
             continue;
@@ -95,8 +87,7 @@ void expand_tokens(t_token *tokens, t_shell *shell)
             tokens = tokens->next;
             continue;
         }
-
-        if (tokens->type == TOKEN_WORD)
+        if (tokens->quote != SINGLE_QUOTE && tokens->type == TOKEN_WORD)
         {
             expanded = expand_string(tokens->value, shell);
             free(tokens->value);

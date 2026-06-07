@@ -109,7 +109,9 @@ char *extract_key(char *var)
 int builtin_export(t_shell *shell, char **args)
 {
     int i;
+    int status;
 
+    status = 0;
     if (!args[1])
     {
         builtin_env(shell);
@@ -120,7 +122,8 @@ int builtin_export(t_shell *shell, char **args)
     {
         if (!is_valid_identifier(args[i]))
         {
-            printf("minishell: export: `%s': not a valid identifier\n", args[i]);
+            fprintf(stderr, "minishell: export: `%s': not a valid identifier\n", args[i]);
+            status = 1;
         }
         else if (!strchr(args[i], '='))
         {
@@ -146,7 +149,7 @@ int builtin_export(t_shell *shell, char **args)
         }
         i++;
     }
-    return (0);
+    return (status);
 }
 
 int find_env_index(char **env, char *key)

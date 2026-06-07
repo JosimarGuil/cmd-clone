@@ -81,7 +81,7 @@ t_token *lexer(char *input);
 
 //tokenize_utils.c
 char **add_to_array(char **array, char *new_str);
-
+char *read_word(char *input, int *i, t_quote_type *quote);
 //parse.c
 t_ast_node *parse_expression(t_token **tokens, int min_prec);
 

@@ -19,10 +19,8 @@ int is_numeric(char *str)
     {
         if (!isdigit(str[i]))
             return (0);
-
         i++;
     }
-
     return (1);
 }
 
@@ -37,15 +35,13 @@ int builtin_exit(char **args)
 
     if (!is_numeric(args[1]))
     {
-        printf("minishell: exit: %s: numeric argument required\n",
-            args[1]);
-
-        exit(255);
+        fprintf(stderr, "minishell: exit: too many arguments\n");
+        exit(2);
     }
 
     if (args[2])
     {
-        printf("minishell: exit: too many arguments\n");
+        fprintf(stderr, "minishell: exit: %s: numeric argument required\n", args[1]);
         return (1);
     }
 
