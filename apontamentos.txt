@@ -1,0 +1,12 @@
+Ate o momento atual: ParseExpression
+
+Exemplo Prático de FluxoSe o input for: ls | grep a && echo okparse_expression(tokens, 1) 
+chama parse_simple_command -> Retorna ls.Vê o | (Prec 2). Como $2 \geq 1$, entra no loop.Cria nó PIPE. 
+Esquerda = ls.Chama parse_expression(tokens, 2) para a direita.Consome grep a.Vê o && (Prec 1). 
+Como $1 < 2$, o break acontece.Retorna grep a.O nó PIPE agora tem ls à esquerda e grep a à direita.
+O loop continua. Vê o && (Prec 1). Como $1 \geq 1$, entra no loop.Cria nó AND. 
+Esquerda = (Toda a sub-árvore do PIPE).Chama parse_expression(tokens, 1) para a direita.
+Consome echo ok.Retorna a árvore final.Por que isto é consistente?
+Esta abordagem resolve o problema da associatividade à esquerda. 
+Operadores com a mesma precedência (como && e ||) serão processados de forma que o primeiro se torne o "avô" do segundo se aparecerem em sequência, 
+mantendo a ordem de execução correta do Bash.
