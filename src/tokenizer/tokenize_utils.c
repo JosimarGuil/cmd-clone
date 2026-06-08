@@ -8,17 +8,20 @@ char *read_word(char *input, int *i, t_quote_type *quote)
     char current_quote;
 
     j = 0;
+    *quote = NO_QUOTE;
 
-    while (input[*i] && input[*i] != ' ' && input[*i] != '|' && input[*i] != '>' && input[*i] != '<')
+    while (input[*i] && input[*i] != ' ' && input[*i] != '|'
+        && input[*i] != '>' && input[*i] != '<')
     {
         if (input[*i] == '\'' || input[*i] == '"')
         {
-            if (input[*i] == '\'')
+            current_quote = input[*i];
+
+            if (current_quote == '\'')
                 *quote = SINGLE_QUOTE;
             else
                 *quote = DOUBLE_QUOTE;
 
-            current_quote = input[*i];
             (*i)++;
 
             while (input[*i] && input[*i] != current_quote)
@@ -26,9 +29,11 @@ char *read_word(char *input, int *i, t_quote_type *quote)
 
             if (input[*i] == current_quote)
                 (*i)++;
+
+            continue;
         }
-        else
-            buffer[j++] = input[(*i)++];
+
+        buffer[j++] = input[(*i)++];
     }
 
     buffer[j] = '\0';

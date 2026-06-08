@@ -86,6 +86,8 @@ t_token *lexer(char *input)
             i += 2;
             continue;
         }
+        while (input[i] == ' ')
+            i++;
         char *word;
         t_quote_type q;
         q = NO_QUOTE;

@@ -47,10 +47,12 @@ static t_ast_node *parse_simple_command(t_token **tokens)
     {
         if (get_precedence((*tokens)->type) > 0)
             break;
-        if ((*tokens)->type == TOKEN_WORD) 
+        if ((*tokens)->type == TOKEN_WORD)
         {
-            node->args = add_to_array(node->args, (*tokens)->value);
+            if ((*tokens)->value && (*tokens)->value[0] != '\0')
+                node->args = add_to_array(node->args, (*tokens)->value);
             *tokens = (*tokens)->next;
+            continue;
         }
         else if (is_redirection((*tokens)->type)) 
         {
@@ -60,6 +62,7 @@ static t_ast_node *parse_simple_command(t_token **tokens)
             {
                 add_redir_back(&node->redirs, redir_type, (*tokens)->value);
                 *tokens = (*tokens)->next;
+                continue;
             } else 
             {
                 printf("minishell: syntax error near unexpected token\n");

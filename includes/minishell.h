@@ -94,7 +94,7 @@ void free_ast(t_ast_node *node);
 //execute.c
 
 int execute_ast(t_ast_node *node, t_shell *shell);
-void apply_redirections(t_redir *redir);
+int apply_redirections(t_redir *redir);
 
 void print_ast(t_ast_node *node, int level);
 int ft_isalpha(int c);
